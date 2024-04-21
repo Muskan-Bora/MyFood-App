@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static '/food/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AWRdg90aaj_L-32nUyd9IH8QoWTv8zAsWq24atTwrAKmhFYjFkMuxV8ivyCWyWCvce8I_3OFbDYdeCC6&currency=USD"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a href="{% url 'food:index' %}" class="navbar-brand">
+            The Food Space
+        </a>
+
+        <!-- For Search Functionality -->
+
+        <form action="{% url 'food:index' %}" method="GET">
+            {% csrf_token %}
+            <span><b style="color: white">Search:</b></span>
+            <input type="search" name="item_name">
+            <button type="search">Search</button>
+        </form>
+
+        <!-- Path for the Current Page -->
+        <!-- Navbar Form -->
+
+        <form action="{% url 'food:navform' %}" method="POST">
+            {% csrf_token %}
+            <span><b style="color: white">Form: </b></span>
+            <input type="text" nav="navformdata">
+            <input type="text" name="path_name" value="{{ request.path }}">
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="navbar">
+
+            {% if user.is_superuser %}
+                
+                <a href= "{% url 'food:create_item' %}" class="navbar-brand">
+                    Add Item
+                </a>
+
+                <a href="{% url 'profile' %}" class="nav-item nav-link btn btn-dark">
+                    Profile
+                </a>
+
+                <a href="{% url 'logout' %}" class="nav-item nav-link btn btn-dark">
+                    Logout
+                </a>
+
+            {% elif user.is_authenticated %}
+
+                <a href="{% url 'profile' %}" class="nav-item nav-link btn btn-dark">
+                    Profile
+                </a>
+
+                <a href="{% url 'logout' %}" class="nav-item nav-link btn btn-dark">
+                    Logout
+                </a>
+            
+            {% else %}
+
+                <a href="{% url 'register' %}" class="nav-item nav-link btn btn-dark">
+                    Sign Up
+                </a>
+
+                <a href="{% url 'login' %}" class="nav-item nav-link btn btn-dark">
+                    Login
+                </a>
+            
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if messages %}
+        
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="mb-5">
+
+    </div>
+
+    {% block body %}
+    {% endblock body %}
+
+</body>
+</html>
